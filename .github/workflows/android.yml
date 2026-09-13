@@ -1,0 +1,83 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Release 任务需要写 Contents 权限来创建 GitHub Release
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: 构建 Debug APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: 配置 Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # 缓存 Gradle 依赖与 wrapper，加快后续构建
+          gradle-version: wrapper
+
+      - name: 赋予 gradlew 可执行权限
+        run: chmod +x ./gradlew
+
+      - name: 构建 Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: 上传 APK 构件
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+  release:
+    name: 发布 Release
+    needs: build
+    # 仅在推送 v 开头的 tag 时执行
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: 配置 Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+
+      - name: 赋予 gradlew 可执行权限
+        run: chmod +x ./gradlew
+
+      - name: 构建 Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: 创建 GitHub Release 并附带 APK
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: app/build/outputs/apk/debug/*.apk
