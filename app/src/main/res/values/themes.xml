@@ -1,4 +1,4 @@
 <resources>
     <!-- Compose 工程的基础主题，真正的配色在 Compose 主题中处理 -->
-    <style name="Theme.HideRoot" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.HideRootAPP" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

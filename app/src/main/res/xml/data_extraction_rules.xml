@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- TODO: 在此声明需要纳入云端备份的文件规则 -->
+    </cloud-backup>
+    <device-transfer>
+        <!-- TODO: 在此声明设备迁移时的文件规则 -->
+    </device-transfer>
+</data-extraction-rules>

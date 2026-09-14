@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 为 API 24/25 提供 mipmap 兜底；API 26+ 优先使用 mipmap-anydpi-v26 的 adaptive-icon -->
+    <item name="ic_launcher" type="mipmap">@drawable/ic_launcher_legacy</item>
+    <item name="ic_launcher_round" type="mipmap">@drawable/ic_launcher_legacy</item>
+</resources>
